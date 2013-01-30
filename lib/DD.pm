@@ -3,24 +3,18 @@ package DD;
 use strict;
 use warnings;
 
-use Data::Dumper;
+use Data::Dumper ();
+Data::Dumper->import(@Data::Dumper::EXPORT, @Data::Dumper::EXPORT_OK);
 
-require Exporter;
-our @ISA = qw(
-  Exporter
-  Data::Dumper
-);
-our @EXPORT = qw(
-  D
-);
-push @EXPORT, @Data::Dumper::EXPORT;
+# Don't need to import Exporter as Data::Dumper already inherits from it
+our @ISA = 'Data::Dumper';
 
-our @EXPORT_OK = qw(
-  pD
-);
-push @EXPORT_OK, @Data::Dumper::EXPORT_OK;
+our @EXPORT = ( 'D', @Data::Dumper::EXPORT );
+our @EXPORT_OK = ( 'pD', @Data::Dumper::EXPORT_OK );
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
+
+=encoding utf-8
 
 =head1 NAME
 
@@ -54,7 +48,7 @@ is an alias for
 
 =cut
 
-sub D { return Dumper( @_ ); }
+*D = \&Dumper;
 
 =head2 C<@Data::Dumper::EXPORT>
 
@@ -73,7 +67,7 @@ is an alias for
 
 =cut
 
-sub pD { print Dumper( @_ ); }
+sub pD { print D( @_ ) }
 
 =head2 C<@Data::Dumper::EXPORT_OK>
 
@@ -82,6 +76,8 @@ C<@Data::Dumper::EXPORT_OK> is exported on request, hence e.g. C<DumperX()> can 
 =head1 AUTHOR
 
 east E<lt>east@cpan.orgE<gt>
+
+Olivier Mengué E<lt>dolmen@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
